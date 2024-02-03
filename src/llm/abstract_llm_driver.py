@@ -37,3 +37,12 @@ class AbstractLLMDriver(abc.ABC):
         Choose the most relevant tool.
         """
         pass
+        
+    @abc.abstractmethod
+    def decide_arguments(self, tool_code, query, context):
+        """
+        Decide the arguments to set given the tool code, 
+        user query and context.
+        """
+        pass
+   
