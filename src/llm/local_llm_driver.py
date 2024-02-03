@@ -117,19 +117,23 @@ User query: {query}<|im_end|>
   
   def decide_arguments(self, tool_code, query, context):
     prompt = f"""<|im_start|>system
-A helpful argument-filling assistant supplies the given tool with relevant arguments values, gleaned from the context and user query. It's ok to skip arguments that are unknown.
+A helpful argument-filling assistant supplies the given tool with relevant arguments values, gleaned from the context and user query. arguments_gleaned_from_query_and_context only contains arguments that are known.
 Tool code: {tool_code}<|im_end|>
 <|im_start|>user
 Context: {context}
 User query: {query}
 <|im_end|>
 <|im_start|>assistant
-known_arguments = {{"""
+arguments_gleaned_from_query_and_context = {{"""
     llm_response = self.generate_response(prompt, stop_token="}")
     llm_response = "{" + llm_response.strip() + "}"
     llm_response = llm_response.replace("'", '"')
-    response_dict = json.loads(llm_response)
+    # Remove any lines containing ": None"
+    llm_response_lines = llm_response.split('\n')
+    llm_response_lines = [line for line in llm_response_lines if ": None" not in line]
+    llm_response = '\n'.join(llm_response_lines)
     
-    argument_values = response_dict
+    argument_values = json.loads(llm_response)
+
     return argument_values
   

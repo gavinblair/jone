@@ -13,8 +13,8 @@ class CurrencyConverterTool(AbstractTool):
         self.define_arguments()
 
     def define_arguments(self):
-        self.add_argument('amount', float, required=True, "What amount would you like to convert?")
-        self.add_argument('from_currency', str, required=True, "Which currency are you converting from?")
-        self.add_argument('to_currency', str, required=True, "Which currency are you converting to?")
+        self.add_argument('amount', float, required=True, prompt="What amount would you like to convert?")
+        self.add_argument('from_currency', str, required=True, prompt="Which currency are you converting from?")
+        self.add_argument('to_currency', str, required=True, prompt="Which currency are you converting to?")
 
 

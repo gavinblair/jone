@@ -13,5 +13,5 @@ class ClearCachesTool(AbstractTool):
         self.define_arguments()
 
     def define_arguments(self):
-        self.add_argument('site', float, required=True, "What is the site slug?")
-        self.add_argument('env', str, required=True, "What is the multidev environment slug?")
+        self.add_argument('site', float, required=True, prompt="What is the site slug?")
+        self.add_argument('env', str, required=True, prompt="What is the multidev environment slug?")

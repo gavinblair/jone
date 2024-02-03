@@ -4,7 +4,7 @@ def convert_currency(amount, from_currency, to_currency):
     # Placeholder function. In a real-world application, you would need to integrate
     # with an API to get the current exchange rates.
     # This function currently just returns the same amount for demonstration.
-    return amount
+    return amount * .75
 
 def main():
     parser = argparse.ArgumentParser(description='Currency Conversion Tool')
