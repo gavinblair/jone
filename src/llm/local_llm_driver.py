@@ -123,34 +123,16 @@ User query: {query}<|im_end|>
   
     return class_name
   
-  def decide_arguments(self, tool, query, context):
-    arguments = tool.arguments
-    arguments_str = str(arguments).replace('<class \'', '').replace('\'>', '').replace('{', '{{').replace('}', '}}')
-
-    class_name = tool.__class__.__name__
+  def decide_arguments(self, tool_code, query, context):
     prompt = f"""<|im_start|>system
-A helpful argument-filling assistant supplies the given tool with relevant arguments values, gleaned from the context and user query. It's ok to skip arguments that are unknown.<|im_end|>
-<|im_start|>user
-Context: i'm working on pantheon, on the abc-123 site. I'm on the dev2 environment.
-User query: clear the caches on the test environment
-Tool: ClearCachesTool
-Arguments: {{'site': {{'datatype': 'float', 'required': True, 'prompt': 'What is the site slug?'}}, 'env': {{'datatype': <class 'str'>, 'required': True, 'prompt': 'What is the multidev environment slug?'}}<|im_end|>
-<|im_start|>assistant
-{{'site':'abc-123','env':'test'}}<|im_end|>
-<|im_start|>user
-Context: i'm working on pantheon, on the abc-123 site. I'm on the dev2 environment.
-User query: convert $100 to CAD please
-Tool: ClearCachesTool
-Arguments: {{'amount': {{'datatype': 'float', 'required': True, 'prompt': 'What amount would you like to convert?'}}, 'from_currency': {{'datatype': <class 'str'>, 'required': True, 'prompt': 'Which currency are you converting from?'}}, 'to_currency': {{'datatype': <class 'str'>, 'required': True, 'prompt': 'Which currency are you converting to?'}}}}<|im_end|><|im_end|>
-<|im_start|>assistant
-{{'amount':'100','to_currency':'CAD'}}<|im_end|>
+A helpful argument-filling assistant supplies the given tool with relevant arguments values, gleaned from the context and user query. It's ok to skip arguments that are unknown.
+Tool code: {tool_code}<|im_end|>
 <|im_start|>user
 Context: {context}
 User query: {query}
-Tool: {class_name}
-Arguments: {arguments_str}<|im_end|>
+<|im_end|>
 <|im_start|>assistant
-{{"""
+known_arguments = {{"""
     llm_response = self.generate_response(prompt, stop_token="}")
     llm_response = "{" + llm_response.strip() + "}"
     llm_response = llm_response.replace("'", '"')
