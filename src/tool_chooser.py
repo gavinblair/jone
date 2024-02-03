@@ -8,8 +8,8 @@ from .tool.financial.currency_converter_tool import CurrencyConverterTool
 from .tool.pantheon.clear_caches_tool import ClearCachesTool
 
 class ToolChooser:
-    def __init__(self, question, context, llm_driver, is_called_by_voice):
-        self.question = question
+    def __init__(self, query, context, llm_driver, is_called_by_voice):
+        self.query = query
         self.context = context
         self.llm_driver = llm_driver
         self.is_called_by_voice = is_called_by_voice
@@ -21,7 +21,7 @@ class ToolChooser:
     def choose_tool(self):
     # Toolsets should be listing the packages inside './tool'
         toolsets = self.find_toolsets()
-        toolset = self.llm_driver.decide_toolset(toolsets, self.question, self.context)
+        toolset = self.llm_driver.decide_toolset(toolsets, self.query, self.context)
         if not toolset:
             return None
         
@@ -38,7 +38,7 @@ class ToolChooser:
                 with open(filepath, 'r') as file:
                     toolset_code += file.read() + '\n\n'
         
-        tool_class_name = self.llm_driver.decide_tool(toolset_code, self.question, self.context)
+        tool_class_name = self.llm_driver.decide_tool(toolset_code, self.query, self.context)
         # tool_class_name is the class name of the tool.
     
         # Convention to transform class name to module name: CurrencyConverterTool -> currency_converter_tool
@@ -57,7 +57,7 @@ class ToolChooser:
         # Set the arguments of the tool using the provided mappings
         #todo: use the llm along with the query and context
         # to try to answer some of the argument questions
-        tool.argument_values = self.llm_driver.decide_arguments(tool, self.question, self.context)
+        tool.argument_values = self.llm_driver.decide_arguments(tool, self.query, self.context)
 
     def execute_tool(self, tool):
         #here the toolrunner will ask questions about any remaining required arguments
