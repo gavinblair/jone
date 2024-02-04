@@ -60,6 +60,6 @@ class AbstractTool(abc.ABC):
         Asks user for input for each required argument.
         """
         for arg, properties in self.arguments.items():
-            if properties['required'] and not self.argument_values.get(arg, None):
-                return arg, properties['prompt']
+            if properties.get('required', False) and not self.argument_values.get(arg, None):
+                return arg, properties.get('prompt', '')
         return None, None
