@@ -1,0 +1,34 @@
+LLM
+[???] stop LocalLLMDriver debug stuff from being outputted when loading the model
+  - i got the inference code to stop outputting debug stuff, but it spits it out when loading the model
+  
+[] add a personality function to the llm driver
+ 
+Tool Creation
+- flag to ignore caching for a tool
+- tool to clear the personality cache (don't cache this tool) (also it should reload the personality file), clear the audio cache
+- Tool to open the personality file in vscode
+- pantheon tool to create a sftp config file for vscode from the output of the terminus command to get connection info for an environment
+- toolset to control the computer etc. close tab cmd+w, open tab with cmd+shift+a and typing something and - choosing the top option
+-- previous tab cmd+shift+{
+-- next tab tab cmd+shift+}
+- a flag for tools to tell the user that jone is going to do something before doing it (clear caches, create backup), or just to do it (open error log, log me in)
+- new tool for Jone to update the context with a new project , site etc.
+- a way for jone to create tools by writing code (and testing it??)
+
+Listening
+- ability to toggle listening on and off without having to restart.
+- a 'hold to speak' option like the rabbit! anything said while 'holding to speak' should be treated as spoken TO the assistant (it's not just 'overheard')
+- asking for arguments - voice, somehow?
+
+Speech
+- ability to toggle speaking on and off without having to restart.
+- jone should know to not interrupt. jone should wait for a break in the room's conversation before saying what they want to say. if jone wants to say something but people are talking, she will wait for some silence (no words from STT). if after a second or two if there is still talking jone should interject with 'um' or something, on an increasing interval (2s, 10s, 20s, 40s, 1m, 2m (max, just keep repeating 2m after that)), which may shut everyone up or not. just keep waiting longer and saying "um" until there is a break in the conversation (no words from stt for a few seconds). while waiting jone should pre-generate the audio so they can interject quickly enough.
+
+Cache
+- save an audio cache
+
+Threads
+- jone should say "sure, i'll clear the caches" etc. before doing a thing (or WHILE doing a thing?? (threads))
+- threading for tasks
+-- this caused problems in v1 because we weren't managing the threads.
