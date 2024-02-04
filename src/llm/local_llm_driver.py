@@ -3,19 +3,19 @@ import os
 import sys
 from contextlib import contextmanager
 import json
+import re
 
 from .abstract_llm_driver import AbstractLLMDriver
 
 @contextmanager
 def suppress_output():
   with open(os.devnull, 'w') as devnull:
-    original_stdout, original_stderr = sys.stdout, sys.stderr
-    sys.stdout, sys.stderr = devnull, devnull
+    original_stderr = sys.stderr
+    sys.stderr = devnull
     try:
       yield
     finally:
-      sys.stdout, sys.stderr = original_stdout, original_stderr
-
+            sys.stderr = original_stderr
 
 class LocalLLMDriver(AbstractLLMDriver):
   def __init__(self):
@@ -126,14 +126,47 @@ User query: {query}
 <|im_start|>assistant
 arguments_gleaned_from_query_and_context = {{"""
     llm_response = self.generate_response(prompt, stop_token="}")
-    llm_response = "{" + llm_response.strip() + "}"
-    llm_response = llm_response.replace("'", '"')
-    # Remove any lines containing ": None"
-    llm_response_lines = llm_response.split('\n')
-    llm_response_lines = [line for line in llm_response_lines if ": None" not in line]
-    llm_response = '\n'.join(llm_response_lines)
-    
-    argument_values = json.loads(llm_response)
-
+    argument_values = self.parse_llm_response_to_dict(llm_response)
     return argument_values
-  
+
+  def parse_llm_response_to_dict(self, llm_response):
+        # Add braces if they're not there
+        if not llm_response.strip().startswith("{"):
+            llm_response = "{" + llm_response.strip()
+        if not llm_response.strip().endswith("}"):
+            llm_response = llm_response.strip() + "}"
+
+        # Replace single quotes with double quotes
+        llm_response = llm_response.replace("'", '"')
+
+        # Remove any lines containing ": None"
+        llm_response_lines = llm_response.split('\n')
+        llm_response_lines = [line for line in llm_response_lines if ": None" not in line]
+
+        # Remove comments and handle any trailing commas
+        llm_response_processed = []
+        for line in llm_response_lines:
+            # Remove Python comments (assuming they start with #)
+            line = re.sub(r'#.*$', '', line).strip()
+            
+            # Check if it ends with a comma and is not the last line
+            if line.endswith(",") and line != llm_response_lines[-1]:
+                next_line_index = llm_response_lines.index(line) + 1
+                # If the next line is not a closing bracket, keep the comma
+                if not re.match(r'^\s*\}', llm_response_lines[next_line_index].strip()):
+                    llm_response_processed.append(line)
+                else:
+                    # Remove the trailing comma
+                    llm_response_processed.append(line[:-1])
+            else:
+                llm_response_processed.append(line)
+
+        llm_response = '\n'.join(llm_response_processed)
+
+        # Use json.loads to parse the llm_response string to a dictionary
+        try:
+            response_dict = json.loads(llm_response)
+            return response_dict
+        except json.JSONDecodeError as e:
+            print(f"Error parsing JSON: {e}")
+            return None
