@@ -126,9 +126,6 @@ User query: {query}
 <|im_start|>assistant
 arguments_gleaned_from_query_and_context = {{"""
     llm_response = self.generate_response(prompt, stop_token="}")
-    print("llm_response:")
-    print(llm_response)
-    print("--------")
     argument_values = self.parse_llm_response_to_dict(llm_response)
     return argument_values
 
@@ -150,8 +147,7 @@ arguments_gleaned_from_query_and_context = {{"""
     # Attempt to parse again after corrections
     try:
         response_dict = json.loads(f"{{ {corrected_response} }}")
-        print("Parsed JSON successfully after corrections.")
         return response_dict
     except json.JSONDecodeError as e:
-        print(f"Error parsing JSON after corrections: {e}\nCorrected llm_response: {corrected_response}")
+        print(f"Error parsing JSON after corrections: {e}\{llm_response} -> {corrected_response}")
         return None
