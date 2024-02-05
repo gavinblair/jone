@@ -151,3 +151,19 @@ arguments_gleaned_from_query_and_context = {{"""
     except json.JSONDecodeError as e:
         print(f"Error parsing JSON after corrections: {e}\{llm_response} -> {corrected_response}")
         return None
+        
+  def personality(self, text, query, context):
+      prompt = f"""<|im_start|>system
+A personality translating machine gives personality to the output of a tool.
+Personality: Rewrite the tool output as a helpful programmer's assistant.
+<|im_start|>user
+Contextual information: {context}
+Original user query: {query}
+Tool output: {text}<|im_end|>
+<|im_start|>assistant
+Rewritten tool output with personality: \\""""
+  
+      # Ask the LLM to generate a response based on the prompt to get the toolset recommendation
+      llm_response = self.generate_response(prompt, stop_token='"')
+      # Assuming generate_response will return a string response containing the name of the best toolset
+      return llm_response
