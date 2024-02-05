@@ -3,6 +3,7 @@ LLM
   - i got the inference code to stop outputting debug stuff, but it spits it out when loading the model
   
 [] add a personality function to the llm driver
+[] caching
  
 Tool Creation
 - flag to ignore caching for a tool
