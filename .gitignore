@@ -1,4 +1,5 @@
 src/llm/models/*
 .DS_Store
 __pycache__
+Jone2.code-workspace
 

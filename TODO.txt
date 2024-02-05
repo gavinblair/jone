@@ -1,10 +1,10 @@
 LLM
 [???] stop LocalLLMDriver debug stuff from being outputted when loading the model
   - i got the inference code to stop outputting debug stuff, but it spits it out when loading the model
-  
+
 [] add a personality function to the llm driver
-[] caching
- 
+[] caching responses by context + query
+
 Tool Creation
 - flag to ignore caching for a tool
 - tool to clear the personality cache (don't cache this tool) (also it should reload the personality file), clear the audio cache
