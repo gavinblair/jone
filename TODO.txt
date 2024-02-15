@@ -2,7 +2,8 @@ LLM
 [???] stop LocalLLMDriver debug stuff from being outputted when loading the model
   - i got the inference code to stop outputting debug stuff, but it spits it out when loading the model
 
-[] add a personality function to the llm driver
+[/] add a personality function to the llm driver
+[...] ollama api llm driver. use new json formatting feature!
 [] caching responses by context + query
 
 Tool Creation
