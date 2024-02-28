@@ -6,7 +6,7 @@ class SftpJsonTool(AbstractTool):
             name="SftpJson",
             description="Gets the SFTP credentials of a pantheon site and stores them in a json file for VS Code to use.",
             toolset="Pantheon",
-            command_template="python3 ./src/tool/pantheon/scripts/sft_json.py {site} {env}",
+            command_template="python3 ./src/tool/pantheon/scripts/sftp_json.py {site} {env}",
             can_be_triggered_by_voice_command=False,
             display_command_output_to_user=False
         )

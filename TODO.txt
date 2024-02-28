@@ -1,4 +1,6 @@
 LLM
+[] finetune: create data for toolset choosing, tool selection and argument filling.
+[] do a (q)lora finetune on the local llm with this data with mlx
 [???] stop LocalLLMDriver debug stuff from being outputted when loading the model
   - i got the inference code to stop outputting debug stuff, but it spits it out when loading the model
 

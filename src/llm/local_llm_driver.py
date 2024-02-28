@@ -18,13 +18,13 @@ def suppress_output():
       sys.stderr = original_stderr
 
 class LocalLLMDriver(AbstractLLMDriver):
-  def __init__(self):
+  def __init__(self, model_file="models/capybarahermes-2.5-mistral-7b.Q4_K_M.gguf"):
     super().__init__(
       name="Local"
     )
     with suppress_output():
       self.llm = Llama(
-        model_path="./src/llm/models/capybarahermes-2.5-mistral-7b.Q4_K_M.gguf",  # Download the model file first
+        model_path=model_file,  # Download the model file first
         n_ctx=32768,  # The max sequence length to use - note that longer sequence lengths require much more resources
         n_threads=8,            # The number of CPU threads to use, tailor to your system and the resulting performance
         n_gpu_layers=35,         # The number of layers to offload to GPU, if you have GPU acceleration available
@@ -161,7 +161,8 @@ Contextual information: {context}
 Original user query: {query}
 Tool output: {text}<|im_end|>
 <|im_start|>assistant
-Rewritten tool output with personality: \\""""
+Rewritten tool output with personality: """
+      prompt += '\"' #start the quote
   
       # Ask the LLM to generate a response based on the prompt to get the toolset recommendation
       llm_response = self.generate_response(prompt, stop_token='"')
